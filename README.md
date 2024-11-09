@@ -31,7 +31,7 @@ Make sure to adjust the file path in the script if your data file is located els
 
 ## Visualization
 
-The project uses Matplotlib and NetworkX to visualize the transition probabilities as a directed graph. The nodes represent different price change states, and the edges represent the probabilities of transitioning from one state to another.
+The project uses Matplotlib and NetworkX to visualize the transition probabilities as a directed graph. The nodes represent different price change states, and the edges represent the probabilities of transitioning from one state to another. And the project makes use of Tabulate to visualise the most important bits of data as a table.
 
 Nodes are colored red for decreasing states and green for increasing states.
 The width of the edges corresponds to the transition probability.
@@ -42,6 +42,7 @@ This project requires the following Python packages:
 
 numpy
 matplotlib
+tabulate
 networkx
 You can install these packages via pip as mentioned in the Installation section.
 
