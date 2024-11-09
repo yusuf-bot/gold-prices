@@ -4,34 +4,39 @@ This project analyzes historical gold stock price data and visualizes the transi
 
 ## Table of Contents
 
-- [Installation](#installation)
 - [Usage](#usage)
 - [Data Source](#data-source)
 - [Visualization](#visualization)
 - [Dependencies](#dependencies)
 - [License](#license)
 
+## Usage
+Place your goldstock.csv file in the project directory. The CSV file should contain the historical gold stock prices with at least two columns: date and price.
 
+Run the analysis script:
 
-##Data Source
+```
+python gold.py
+```
+The script will read the data, compute the transition probabilities between different price change states, and display a directed graph representing these transitions.
+
+## Data Source
 The data used in this project is stored in a CSV file named goldstock.csv. This file should contain historical gold stock prices with the following format:
-
-Insert Code
-
+```
 Date,Close
 2023-01-01,1800.00
 2023-01-02,1810.00
-
+```
 Make sure to adjust the file path in the script if your data file is located elsewhere.
 
-##Visualization
+## Visualization
 
 The project uses Matplotlib and NetworkX to visualize the transition probabilities as a directed graph. The nodes represent different price change states, and the edges represent the probabilities of transitioning from one state to another.
 
 Nodes are colored red for decreasing states and green for increasing states.
 The width of the edges corresponds to the transition probability.
 
-##Dependencies
+## Dependencies
 
 This project requires the following Python packages:
 
@@ -40,7 +45,7 @@ matplotlib
 networkx
 You can install these packages via pip as mentioned in the Installation section.
 
-##License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 
