@@ -1,6 +1,7 @@
 import csv
 import matplotlib.pyplot as plt
 import networkx as nx
+
 import numpy as np
 
 data = np.genfromtxt(
@@ -102,14 +103,16 @@ for i, state1 in enumerate(count.values()):
 edge_labels = nx.get_edge_attributes(G, 'weight')
 edge_labels = {(u, v): f"{w:.2f}" for (u, v, w) in G.edges(data='weight')}
 
-pos = nx.spring_layout(G, seed=42, k=50)
+
+# Set the Kamada-Kaway layout with the distance dictionary
+pos = nx.spring_layout(G,seed=42,k=5)
 
 plt.figure(figsize=(12, 10))
 
 node_color = ['red' if 'dec' in node else 'green' for node in G.nodes()]
 edge_colors = [G[u][v]['weight'] for u, v in G.edges()]
 
-nx.draw_networkx_nodes(G, pos, node_color=node_color, node_size=2200, alpha=0.8)
+nx.draw_networkx_nodes(G, pos, node_color=node_color, node_size=2500, alpha=0.8, linewidths=2,edgecolors='black')
 nx.draw_networkx_edges(G, pos, width=edge_colors * 10, edge_color=edge_colors, alpha=0.7)
 nx.draw_networkx_labels(G, pos, font_size=8, font_family='sans-serif')
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=5)
