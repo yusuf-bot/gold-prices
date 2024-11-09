@@ -46,6 +46,12 @@ tabulate
 networkx
 You can install these packages via pip as mentioned in the Installation section.
 
+
+## Next Steps
+
+The next steps are to utilise the rest of the data available, such as the open, high, low, and volume metrics, to create more states and be able to draw more conclusive results than present.
+
+
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
