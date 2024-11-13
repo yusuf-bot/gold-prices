@@ -11,54 +11,54 @@ num_data = data.shape[0]
 labels = np.full(num_data, -1, dtype=int)
 
 # Define price movement states
-count = {
-    0: "dec > 5.00%",
-    1: "dec >2.00%",
-    2: "dec >1.75%",
-    3: "dec >1.50%",
-    4: "dec >1.25%",
-    5: "dec >1.00%",
-    6: "dec >0.75%",
-    7: "dec >0.50%",
-    8: "dec >0.25%",
-    9: "dec <0.25%",
-    10: "inc <0.25%",
-    11: "inc >0.25%",
-    12: "inc >0.50%",
-    13: "inc >0.75%",
-    14: "inc >1.00%",
-    15: "inc >1.25%",
-    16: "inc >1.50%",
-    17: "inc >1.75%",
-    18: "inc >2.00%",
-    19: "inc >5.00%"
-}
+
 curr_price = data[0, 1]
 price_changes = data[:, 1] / curr_price
 
 # Define conditions for labeling
-conditions = [
-    (price_changes < 0.95),
-    (price_changes > 0.95) & (price_changes <= 0.98),
-    (price_changes > 0.98) & (price_changes <= 0.9825),
-    (price_changes > 0.9825) & (price_changes <= 0.985),
-    (price_changes > 0.985) & (price_changes <= 0.9875),
-    (price_changes > 0.9875) & (price_changes <= 0.99),
-    (price_changes > 0.99) & (price_changes <= 0.9925),
-    (price_changes > 0.9925) & (price_changes <= 0.995),
-    (price_changes > 0.995) & (price_changes <= 0.9975),
-    (price_changes > 0.9975) & (price_changes < 1),
-    (price_changes >= 1) & (price_changes < 1.0025),
-    (price_changes >= 1.0025) & (price_changes < 1.005),
-    (price_changes >= 1.005) & (price_changes < 1.0075),
-    (price_changes >= 1.0075) & (price_changes < 1.01),
-    (price_changes >= 1.01) & (price_changes < 1.0125),
-    (price_changes >= 1.0125) & (price_changes < 1.015),
-    (price_changes >= 1.015) & (price_changes < 1.0175),
-    (price_changes >= 1.0175) & (price_changes < 1.02),
-    (price_changes >= 1.02) & (price_changes <= 1.05),
-    (price_changes > 1.05)
-]
+
+
+# Define price movements
+states = [10, 5, 2, 1]
+
+# Initialize empty dictionaries and lists
+count = {}
+conditions = []
+
+# Initial index for count
+i = 0
+
+# Generate conditions dynamically
+for ind in range(len(states)):
+    lower_bound = 1 - (states[ind] / 100)
+    upper_bound = 1 + (states[ind] / 100)
+
+    # For the first state, add extreme cases >10% decrease and >10% increase
+    if ind == 0:
+        count[i] = f"dec >{states[ind]:.2f}%"
+        count[i + 1] = f"inc >{states[ind]:.2f}%"
+        conditions.append(price_changes < lower_bound)
+        conditions.append(price_changes > upper_bound)
+    else:
+        # Add intermediate cases based on decreasing states thresholds
+        prev_lower = 1 - (states[ind - 1] / 100)
+        prev_upper = 1 + (states[ind - 1] / 100)
+        
+        count[i] = f"dec >{states[ind]:.2f}%"
+        count[i + 1] = f"inc >{states[ind]:.2f}%"
+        conditions.append((price_changes > prev_lower) & (price_changes <= lower_bound))
+        conditions.append((price_changes > upper_bound) & (price_changes <= prev_upper))
+    
+    # Increment index for count dictionary
+    i += 2
+
+# Add the final case for price changes close to 1 (within the smallest state threshold)
+count[i] = f"dec <{states[-1]:.2f}%"
+count[i + 1] = f"inc <{states[-1]:.2f}%"
+conditions.append((price_changes > lower_bound) & (price_changes <= 1))
+conditions.append((price_changes <= upper_bound) & (price_changes > 1))
+
+
 
 # Label the price changes based on the defined conditions
 for i, condition in enumerate(conditions):
@@ -136,8 +136,8 @@ plt.show()
 
 
 # Define indices for decrease and increase states based on the count dictionary
-decrease_states = list(range(10))  # Indices for dec states (0 to 9)
-increase_states = list(range(10, 20))  # Indices for inc states (10 to 19)
+decrease_states = list(range(0,len(count.keys()),2))  # Indices for dec states (0 to 9)
+increase_states = list(range(1,len(count.keys()),2))  # Indices for inc states (10 to 19)
 
 # Initialize dictionaries to store the highest probabilities
 
@@ -183,3 +183,5 @@ print("\n" + "-" * 50 + "\n")
 # Print sorted results for increase to decrease transitions
 print("Highest Transition Probabilities from Increase to Decrease States (Sorted):")
 print(tabulate(inc_to_dec_probs, headers=["Increase State", "Decrease State", "Probability"], tablefmt="grid"))
+
+
